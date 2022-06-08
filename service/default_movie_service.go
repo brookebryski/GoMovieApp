@@ -40,3 +40,47 @@ func (d *DefaultMovieService) GetMovie(id int) (model.Movie, error) {
 	}
 	return movie, nil
 }
+
+func (d *DefaultMovieService) CreateMovie(movie model.Movie) error {
+	if movie.Title == "" {
+		return ErrTitleIsNotEmpty
+	}
+	return d.movieRepo.CreateMovie(movie)
+}
+
+func (d *DefaultMovieService) DeleteMovie(id int) error {
+	if id <= 0 {
+		return ErrIDIsNotValid
+	}
+
+	err := d.movieRepo.DeleteMovie(id)
+	if err != nil {
+		if errors.Is(err, repository.ErrMovieNotFound) {
+			return ErrMovieNotFound
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (d *DefaultMovieService) DeleteAllMovies() error {
+	return d.movieRepo.DeleteAllMovies()
+}
+
+func (d *DefaultMovieService) UpdateMovie(id int, movie model.Movie) error {
+	if id <= 0 {
+		return ErrIDIsNotValid
+	}
+
+	if movie.Title == "" {
+		return ErrTitleIsNotEmpty
+	}
+
+	err := d.movieRepo.UpdateMovie(id, movie)
+	if errors.Is(err, repository.ErrMovieNotFound) {
+		return ErrMovieNotFound
+	}
+
+	return nil
+}

@@ -36,3 +36,47 @@ func (i *inmemoryMovieRepository) GetMovie(id int) (model.Movie, error) {
 	}
 	return model.Movie{}, ErrMovieNotFound
 }
+
+func (i *inmemoryMovieRepository) CreateMovie(movie model.Movie) error {
+	movie.ID = len(i.Movies) + 1
+	i.Movies = append(i.Movies, movie)
+
+	return nil
+}
+
+func (i *inmemoryMovieRepository) UpdateMovie(id int, movie model.Movie) error {
+	for k := 0; k < len(i.Movies); k++ {
+		if i.Movies[k].ID == id {
+			i.Movies[k].Title = movie.Title
+			return nil
+		}
+	}
+
+	return ErrMovieNotFound
+}
+
+func (i *inmemoryMovieRepository) DeleteMovie(id int) error {
+	movieExist := false
+
+	var newMovieList []model.Movie
+	for _, movie := range i.Movies {
+		if movie.ID == id {
+			movieExist = true
+		} else {
+			newMovieList = append(newMovieList, movie)
+		}
+	}
+
+	if !movieExist {
+		return ErrMovieNotFound
+	}
+
+	i.Movies = newMovieList
+
+	return nil
+}
+
+func (i *inmemoryMovieRepository) DeleteAllMovies() error {
+	i.Movies = nil
+	return nil
+}

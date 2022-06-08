@@ -20,6 +20,13 @@ func main() {
 	router.GET("/movies", movieHandler.GetMovies)
 	router.GET("/movies/:id", movieHandler.GetMovie)
 
+	router.POST("/movies", movieHandler.CreateMovie)
+
+	router.DELETE("/movies", movieHandler.DeleteAllMovies)
+	router.DELETE("/movies/:id", movieHandler.DeleteMovie)
+
+	router.PATCH("/movies/:id", movieHandler.UpdateMovie)
+
 	log.Println("http server runs on :8080")
 	err := http.ListenAndServe(":8080", router)
 	log.Fatal(err)
