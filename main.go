@@ -18,6 +18,7 @@ func main() {
 	router := httprouter.New()
 
 	router.GET("/movies", movieHandler.GetMovies)
+	router.GET("/movies/:id", movieHandler.GetMovie)
 
 	log.Println("http server runs on :8080")
 	err := http.ListenAndServe(":8080", router)

@@ -26,3 +26,17 @@ func NewDefaultMovieService(mRepo repository.IMovieRepository) *DefaultMovieServ
 func (d *DefaultMovieService) GetMovies() ([]model.Movie, error) {
 	return d.movieRepo.GetMovies()
 }
+
+func (d *DefaultMovieService) GetMovie(id int) (model.Movie, error) {
+	if id <= 0 {
+		return model.Movie{}, ErrIDIsNotValid
+	}
+	movie, err := d.movieRepo.GetMovie(id)
+
+	if err != nil {
+		if errors.Is(err, repository.ErrMovieNotFound) {
+			return model.Movie{}, ErrMovieNotFound
+		}
+	}
+	return movie, nil
+}

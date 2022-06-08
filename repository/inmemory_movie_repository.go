@@ -27,3 +27,12 @@ func NewInMemoryMovieRepository() *inmemoryMovieRepository {
 func (i *inmemoryMovieRepository) GetMovies() ([]model.Movie, error) {
 	return i.Movies, nil
 }
+
+func (i *inmemoryMovieRepository) GetMovie(id int) (model.Movie, error) {
+	for _, movie := range i.Movies {
+		if movie.ID == id {
+			return movie, nil
+		}
+	}
+	return model.Movie{}, ErrMovieNotFound
+}
